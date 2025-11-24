@@ -345,30 +345,32 @@ function Colorpicker() {
       <Toaster />
       <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-6xl rounded-3xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 lg:p-8 backdrop-blur">
+          {/* Branding at the top */}
+          <div className="flex items-center gap-2 text-slate-200 mb-6">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
+              <FiArrowLeft className="text-sky-400" />
+            </span>
+            <span className="text-sm font-semibold tracking-wide text-slate-200">
+              Joshtecs
+            </span>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
+              <FiDroplet className="text-sky-400" />
+            </span>
+          </div>
+
           {/* Layout: image left, options right (stack on mobile) */}
           <div className="flex flex-col lg:flex-row gap-8">
             {/* LEFT: Image + palette */}
             <div className="flex-1 flex flex-col gap-4 order-1">
               {/* Top bar */}
               <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2 text-slate-200">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
-                    <FiArrowLeft className="text-sky-400" />
-                  </span>
-                  <span className="text-sm font-semibold tracking-wide text-slate-200">
-                    Joshtecs
-                  </span>
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
-                    <FiDroplet className="text-sky-400" />
-                  </span>
-                  <div>
-                    <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-200">
-                      Photo Picker
-                    </h2>
-                    <p className="text-xs text-slate-400">
-                      Tap the image to pick a color.
-                    </p>
-                  </div>
+                <div>
+                  <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-200">
+                    Photo Picker
+                  </h2>
+                  <p className="text-xs text-slate-400">
+                    Tap the image to pick a color.
+                  </p>
                 </div>
 
                 <button

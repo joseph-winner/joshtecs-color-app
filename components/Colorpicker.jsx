@@ -346,7 +346,7 @@ function Colorpicker() {
       <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-6xl rounded-3xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 lg:p-8 backdrop-blur">
           {/* Branding at the top */}
-          <div className="flex items-center gap-2 text-slate-200 mb-6">
+          {/* <div className="flex items-center gap-2 text-slate-200 mb-6">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
               <FiArrowLeft className="text-sky-400" />
             </span>
@@ -356,7 +356,7 @@ function Colorpicker() {
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
               <FiDroplet className="text-sky-400" />
             </span>
-          </div>
+          </div> */}
 
           {/* Layout: image left, options right (stack on mobile) */}
           <div className="flex flex-col lg:flex-row gap-8">

@@ -1,6 +1,13 @@
 "use client";
-import React, { useMemo, useRef, useState } from "react";
-import { FiCopy, FiUpload, FiPlus, FiMinus, FiDroplet } from "react-icons/fi";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import {
+  FiCopy,
+  FiUpload,
+  FiPlus,
+  FiMinus,
+  FiDroplet,
+  FiArrowLeft,
+} from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 
 const INITIAL_PALETTE = [
@@ -119,7 +126,10 @@ function Colorpicker() {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      setUploadedImage(event.target.result);
+      const imageSrc = event.target.result;
+      setUploadedImage(imageSrc);
+      // Extract colors from the newly uploaded image
+      extractColorsFromImage(imageSrc);
     };
     reader.readAsDataURL(file);
   };
@@ -190,6 +200,78 @@ function Colorpicker() {
       return next;
     });
   };
+
+  // Extract dominant colors from image
+  const extractColorsFromImage = (imageSrc) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+
+    img.onload = () => {
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
+
+      // Resize for performance
+      const maxSize = 100;
+      const scale = Math.min(maxSize / img.width, maxSize / img.height);
+      tempCanvas.width = img.width * scale;
+      tempCanvas.height = img.height * scale;
+
+      tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+
+      const imageData = tempCtx.getImageData(
+        0,
+        0,
+        tempCanvas.width,
+        tempCanvas.height
+      );
+      const pixels = imageData.data;
+
+      // Sample pixels and collect colors
+      const colorMap = {};
+      const step = 4; // Sample every 4th pixel for performance
+
+      for (let i = 0; i < pixels.length; i += step * 4) {
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        const a = pixels[i + 3];
+
+        // Skip transparent pixels
+        if (a < 128) continue;
+
+        // Quantize colors to reduce variations
+        const qr = Math.round(r / 32) * 32;
+        const qg = Math.round(g / 32) * 32;
+        const qb = Math.round(b / 32) * 32;
+
+        const hex = rgbToHex(qr, qg, qb);
+        colorMap[hex] = (colorMap[hex] || 0) + 1;
+      }
+
+      // Sort by frequency and get top colors
+      const sortedColors = Object.entries(colorMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 9)
+        .map(([hex], index) => ({
+          name: `Color ${index + 1}`,
+          hex: hex,
+        }));
+
+      if (sortedColors.length > 0) {
+        setPalette(sortedColors);
+        setActiveHex(sortedColors[0].hex);
+      }
+    };
+
+    img.src = imageSrc;
+  };
+
+  // Extract colors from default image on mount
+  useEffect(() => {
+    const defaultImage =
+      "https://images.pexels.com/photos/128421/pexels-photo-128421.jpeg?auto=compress&cs=tinysrgb&w=1200";
+    extractColorsFromImage(defaultImage);
+  }, []);
 
   const handleCopy = (value) => {
     if (navigator?.clipboard) {
@@ -270,6 +352,12 @@ function Colorpicker() {
               {/* Top bar */}
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2 text-slate-200">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
+                    <FiArrowLeft className="text-sky-400" />
+                  </span>
+                  <span className="text-sm font-semibold tracking-wide text-slate-200">
+                    Joshtecs
+                  </span>
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/40">
                     <FiDroplet className="text-sky-400" />
                   </span>
